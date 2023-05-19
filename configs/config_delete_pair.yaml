@@ -1,0 +1,20 @@
+input:
+  #stdin: {}
+  label: ""
+  kafka:
+    addresses:
+     - broker:29092
+    topics: 
+     - inventory
+    target_version: 3.3.1
+    consumer_group: "benthos-poc"
+    checkpoint_limit: 1024
+
+pipeline:
+  processors:
+    - mapping: |
+        root = this
+        root = if this.quantity%2 == 0 {deleted()}
+
+output:
+  stdout: {}

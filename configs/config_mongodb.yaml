@@ -1,0 +1,32 @@
+input:
+  label: ""
+  mongodb:
+    url: "mongodb+srv://consult-avro.u4t39q7.mongodb.net/"
+    database: "avroDB"
+    collection: "avroCol"
+    username: "avro"
+    password: "avropass"
+    query: |
+        root.brand = {"$eq": "adidas"}
+pipeline:
+  processors:
+    - mapping: root = content().uppercase() #Convert to ups
+output:
+  label: ""
+  kafka:
+    addresses:
+      - broker:29092
+    topic: benthos.from_mongodb
+    target_version: 3.3.1
+    key: "static-key"
+    partitioner: fnv1a_hash
+    compression: lz4
+    max_in_flight: 64
+    batching:
+      count: 0
+      byte_size: 0
+      period: ""
+      check: ""
+
+  
+    

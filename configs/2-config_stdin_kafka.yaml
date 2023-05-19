@@ -1,0 +1,13 @@
+input:
+  stdin: {}
+
+pipeline:
+  processors:
+    - mapping: root = content().uppercase() #Convert to ups
+output:
+  label: ""
+  kafka:
+    addresses:
+      - broker:9092
+    topic: benthos.mock_data
+    target_version: 3.3.1

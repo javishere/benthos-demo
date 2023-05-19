@@ -1,0 +1,17 @@
+input:
+  label: ""
+  kafka:
+    addresses:
+      - broker:9092
+    topics: 
+      - benthos.mock_data
+    target_version: 3.3.1
+    consumer_group: "benthos-poc"
+    checkpoint_limit: 1024
+    start_from_oldest: true
+
+pipeline:
+  processors:
+    - mapping: root = content().uppercase() #Convert to ups
+output:
+  stdout: {}

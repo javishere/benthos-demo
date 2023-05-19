@@ -1,0 +1,8 @@
+input:
+  stdin: {}
+
+pipeline:
+  processors:
+    - mapping: root = content().uppercase() #Convert to ups
+output:
+  stdout: {}

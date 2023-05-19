@@ -1,0 +1,28 @@
+input:
+  #stdin: {}
+  label: ""
+  kafka:
+    addresses:
+      - broker:29092
+    topics: 
+      - benthos.output_data.bar
+      - benthos.output_data.foo
+    target_version: 3.3.1
+    consumer_group: "benthos-poc"
+    checkpoint_limit: 1024
+
+pipeline:
+  processors:
+    - mapping: |
+        root.payload = json().payload.(bar|foo)
+        root.meta.topic = meta("kafka_topic") 
+
+output:
+  label: ""
+  kafka:
+    addresses:
+      - broker:29092
+    target_version: 3.3.1
+    topic: 'benthos.output_data'
+   
+  
