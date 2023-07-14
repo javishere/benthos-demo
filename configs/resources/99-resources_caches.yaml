@@ -1,0 +1,15 @@
+cache_resources:
+  # - label: caches
+  #   multilevel: [ 'hottest', 'hot', 'glacier' ]
+  - label: hottest
+    memory:
+      default_ttl: 20m
+  - label: hot
+    redis:
+      url: redis://redis:6379
+      default_ttl: 20s
+  
+   # - label: ""
+  #   aws_s3:
+  #     bucket: "test"
+  #     content_type: application/octet-stream

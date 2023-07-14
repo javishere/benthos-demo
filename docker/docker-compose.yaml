@@ -51,6 +51,23 @@ services:
     image: jeffail/benthos:4.13
     hostname: benthos
     container_name: benthos
-    command: streams
+    #command: streams
+    command: -r "/opt/benthos/resources/*.yaml" -c /opt/benthos/http.yaml streams
     ports:
       - 4195:4195
+    volumes:
+      - /Users/hortajav/Library/CloudStorage/OneDrive-adidas/utils/investigation/benthos/docker/benthos-config:/opt/benthos
+      - /Users/hortajav/Library/CloudStorage/OneDrive-adidas/utils/investigation/benthos/configs/resources:/opt/benthos/resources
+  cache:
+    image: redis:7.0-alpine
+    hostname: redis
+    container_name: redis
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 60 1 --loglevel warning 
+    volumes: 
+      - cache:/data
+volumes:
+  cache:
+    driver: localdocker run -it --network some-network --rm redis redis-cli -h some-redis

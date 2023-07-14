@@ -1,0 +1,63 @@
+input:
+  label: ""
+  kafka:
+    addresses:
+      - broker:29092
+    topics: 
+      - benthos.stats
+    target_version: 3.3.1
+    consumer_group: "benthos-scorer-points-33"
+    checkpoint_limit: 1024
+    start_from_oldest: true
+
+pipeline:
+  processors:
+    - branch:
+        request_map: 'root = this'
+        processors:
+        - try:
+          - cache:
+              resource: hot
+              operator: get
+              key: 'match${! json("match.matchId") }-${! json("pointGoTo") }-points'
+          # - mapping: root = if errored() { deleted() }        
+        - catch:
+          - cache:
+              resource: hot
+              operator: add
+              key: 'match${! json("match.matchId") }-${! json("pointGoTo") }-points'
+              value: 0   
+        result_map: 'root.previousScorerPoints = this'
+    - mapping: |
+        root = this
+        root.scorerPoints.match = root.match.matchId
+        root.scorerPoints.player = root.pointGoTo
+        root.scorerPoints.previousPoints = root.previousScorerPoints
+        root.scorerPoints.points = match {
+          this.previousScorerPoints == 0 || this.previousScorerPoints==none => 15,
+          this.previousScorerPoints == 15 => 30,
+          this.previousScorerPoints == 30 => 40,
+          this.previousScorerPoints == 40 => 0
+        }
+        root = root.scorerPoints
+    - cache:
+        resource: hot
+        operator: set
+        key: 'match${! json("match") }-${! json("player") }-points'
+        value: '${! json("points") }' 
+output:
+  switch:
+    cases:
+      - check: this.previousPoints == 40 && this.points == 0
+        output:
+          kafka:
+            addresses:
+            - broker:29092
+            topic: 'benthos.game_event'
+            target_version: 3.3.1
+      - output:
+          kafka:
+            addresses:
+            - broker:29092
+            topic: 'benthos.scorer_point'
+            target_version: 3.3.1

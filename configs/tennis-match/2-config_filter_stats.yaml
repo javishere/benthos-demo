@@ -1,0 +1,19 @@
+input:
+  label: ""
+  kafka:
+    addresses:
+      - broker:29092
+    topics: 
+      - benthos.stats
+    target_version: 3.3.1
+    consumer_group: "benthos-filter"
+    checkpoint_limit: 1024
+    start_from_oldest: true          
+
+output:
+  label: ""
+  kafka:
+    addresses:
+      - broker:29092
+    topic: 'benthos.${! json().statType }'
+    target_version: 3.3.1
