@@ -19,34 +19,30 @@ pipeline:
           - cache:
               resource: hot
               operator: get
-              key: 'match${! json("match.matchId") }-points'
+              key: 'match${! json("match") }-${! json("player") }-game'
           # - mapping: root = if errored() { deleted() }        
         - catch:
           - cache:
               resource: hot
               operator: add
-              key: 'match${! json("match.matchId") }-points'
-              value: '{"player1":0,"player2":0}'   
-        result_map: 'root.previousScorerPoints = this'
+              key: 'match${! json("match.matchId") }-${! json("player") }-games'
+              value: 0   
+        result_map: 'root.previousScorerGame = this'
     - mapping: |
         root = this
-        root.scorerPoints.match = root.match.matchId
-        root.scorerPoints.winPlayer = root.pointGoTo
-        root.scorerPoints.previousPoints = root.previousScorerPoints
-        root.scorerPoints.points = root.previousScorerPoints
+        root.scorerGames.match = root.match
+        root.scorerGames.player = root.player
+        root.scorerPoints.previousGames = root.previousScorerGame
 
-        let winner = root.pointGoTo
-        root.scoreToUpdate = this.previousScorerPoints.json_path($winner)
+        let test = "player"
+        root.scorerPoints.test = 
 
-        root.scorerPoints.points = match {
-          this.scoreToUpdate == 0 || this.scoreToUpdate==none => "{}",
-          this.scoreToUpdate == 15 => 30,
-          this.scoreToUpdate == 30 => 40,
-          this.scoreToUpdate == 40 => 0
+        root.scorerPoints.Games = match {
+          this.previousScorerGame == 5 => 6,
+          this.previousScorerPoints == 15 => 30,
+          this.previousScorerPoints == 30 => 40,
+          this.previousScorerPoints == 40 => 0
         }
-
-
-
         root = root.scorerPoints
     - cache:
         resource: hot
