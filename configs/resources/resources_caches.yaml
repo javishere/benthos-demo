@@ -1,0 +1,18 @@
+cache_resources:
+  - label: multilevel
+    multilevel: [ 'cold', 'glacier' ]
+  - label: hot
+    memory:
+      default_ttl: 20m
+  - label: cold
+    redis:
+      url: redis://redis:6379
+      default_ttl: 20m
+  - label: glacier
+    file:
+      directory: "/opt/benthos/resources/storage"
+  
+   # - label: "glacier"
+  #   aws_s3:
+  #     bucket: "test"
+  #     content_type: application/octet-stream

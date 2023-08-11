@@ -1,0 +1,53 @@
+input:
+  label: ""
+  generate:
+    interval: 1s
+    count: 0
+    batch_size: 1
+    mapping: |
+      let rand1 = random_int()
+      let matchId = $rand1 % 4
+      root.match = if $matchId == 0 {
+        {
+          "matchId" : $matchId,
+          "player1" : "Nadal",
+          "player2" : "Federer"
+        }
+      } else if $matchId == 1 {
+        {
+          "matchId" : $matchId,
+          "player1" : "Alcaraz",
+          "player2" : "Medvedev"
+        }
+      } else if $matchId == 2 {
+        {
+          "matchId" : $matchId,
+          "player1" : "Ferrer",
+          "player2" : "Djokovic"
+        }
+      } else if $matchId == 3 {
+        {
+          "matchId" : $matchId,
+          "player1" : "Moya",
+          "player2" : "Javi"
+        }
+      }
+
+      let ace = random_int() % 3
+      root.ace = if $ace == 0 {
+        "player1"
+      } else if $ace == 1{
+        "player2"
+      } else {
+        "none"
+      }
+
+      root.statType = "aces"            
+
+output:
+  label: ""
+  kafka:
+    addresses:
+      - broker:29092
+    topic: benthos.stats
+    target_version: 3.3.1

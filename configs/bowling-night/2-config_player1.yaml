@@ -1,0 +1,24 @@
+
+input:
+  label: "player_1_shot"
+  kafka:
+    addresses:
+      - broker:29092
+    topics: 
+      - bowling_turn
+    target_version: 3.3.1
+    consumer_group: "cg-player1-1"
+    start_from_oldest: true
+
+
+pipeline:
+  processors:
+    - mapping: |
+        let rand1 = random_int(1)
+        root = {}
+        root.player = "Javi"
+        root.player_id = 1
+        root.bowls_points = $rand1 % 10 
+
+output:
+  resource: kafka_bowls_shots_results

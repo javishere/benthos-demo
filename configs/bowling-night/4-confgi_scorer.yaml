@@ -1,0 +1,55 @@
+input:
+  label: "kafka_bowls_scorer"
+  kafka:
+    addresses:
+      - broker:29092
+    topics: 
+      - bowling_shots_results
+    target_version: 3.3.1
+    consumer_group: "bowls-scorer-3"
+    start_from_oldest: true
+
+pipeline:
+  threads: 1
+  processors:
+    - branch:
+        request_map: 'root = this'
+        processors:
+        - try:
+          - cache:
+              resource: hot
+              operator: get
+              key: 'match${! json("player") }-${! json("player_id") }-points'
+          # - mapping: root = if errored() { deleted() }        
+        - catch:
+          - cache:
+              resource: hot
+              operator: add
+              key: 'match${! json("player") }-${! json("player_id") }-points'
+              value: '{! json("bowls_points")}'
+        result_map: 'root.previousScorerPoints = this'
+    - mapping: |
+        #!blobl
+        root = this 
+        root.previousScorerPoints = if root.previousScorerPoints == null {
+          root.bowls_points
+        } else {
+          this.previousScorerPoints
+        }
+        root.scorerPoints.player = root.player
+        root.scorerPoints.player_id = root.player_id
+        root.scorerPoints.previousPoints = root.previousScorerPoints
+        root.scorerPoints.points = root.scorerPoints.previousPoints + root.bowls_points
+        root = root.scorerPoints
+    - cache:
+        resource: hot
+        operator: set
+        key: 'match${! json("player") }-${! json("player_id") }-points'
+        value: '${! json("points") }'
+
+output:   
+  kafka:
+    addresses:
+    - broker:29092
+    topic: 'bowling.scorer'
+    target_version: 3.3.1

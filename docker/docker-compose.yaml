@@ -58,6 +58,7 @@ services:
     volumes:
       - /Users/hortajav/Library/CloudStorage/OneDrive-adidas/utils/investigation/benthos/docker/benthos-config:/opt/benthos
       - /Users/hortajav/Library/CloudStorage/OneDrive-adidas/utils/investigation/benthos/configs/resources:/opt/benthos/resources
+      - /Users/hortajav/Library/CloudStorage/OneDrive-adidas/utils/investigation/benthos/docker/resources:/opt/benthos/resources/storage
   cache:
     image: redis:7.0-alpine
     hostname: redis

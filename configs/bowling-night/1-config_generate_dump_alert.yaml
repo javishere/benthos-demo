@@ -1,0 +1,11 @@
+input:
+  label: "turn_init"
+  generate:
+    interval: 10s
+    count: 0
+    batch_size: 1
+    mapping: |
+      root = {}
+      root.new_turn = true
+output:
+  resource: kafka_bowls_turn

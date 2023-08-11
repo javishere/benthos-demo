@@ -1,0 +1,24 @@
+output_resources:
+  - label: kafka_bowls_turn
+    kafka:
+      addresses:
+        - broker:29092
+      topic: bowling_turn
+      target_version: 3.3.1
+  - label: kafka_bowls_shots_results
+    kafka:
+      addresses:
+        - broker:29092
+      topic: bowling_shots_results
+      target_version: 3.3.1
+
+# input_resources:
+#   - label: kafka_bowls_points
+#     kafka:
+#       addresses:
+#         - broker:29092
+#       topics: 
+#         - bowling_turn
+#       target_version: 3.3.1
+#       consumer_group: "cg-turn"
+  
