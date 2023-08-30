@@ -8,7 +8,7 @@ input:
       - benthos.output_data.bar
       - benthos.output_data.foo
     target_version: 3.3.1
-    consumer_group: "benthos-poc"
+    consumer_group: "benthos-poc-demulti"
     checkpoint_limit: 1024
 
 pipeline:

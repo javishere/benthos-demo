@@ -29,4 +29,4 @@
 
 ## Notes
 
-* Inside Blobang: *this* is the input document and *root* is the output document.
+* Inside Mapping processor: *this* is the input document and *root* is the output document.

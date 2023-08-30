@@ -6,7 +6,7 @@ input:
     topics: 
       - bowling_shots_results
     target_version: 3.3.1
-    consumer_group: "bowls-scorer-3"
+    consumer_group: "bowls-scorer-4"
     start_from_oldest: true
 
 pipeline:
@@ -17,13 +17,13 @@ pipeline:
         processors:
         - try:
           - cache:
-              resource: hot
+              resource: multilevel
               operator: get
               key: 'match${! json("player") }-${! json("player_id") }-points'
           # - mapping: root = if errored() { deleted() }        
         - catch:
           - cache:
-              resource: hot
+              resource: multilevel
               operator: add
               key: 'match${! json("player") }-${! json("player_id") }-points'
               value: '{! json("bowls_points")}'
@@ -31,7 +31,7 @@ pipeline:
     - mapping: |
         #!blobl
         root = this 
-        root.previousScorerPoints = if root.previousScorerPoints == null {
+        root.previousScorerPoints = if root.previousScorerPoints.type() == "object" {
           root.bowls_points
         } else {
           this.previousScorerPoints
@@ -39,10 +39,10 @@ pipeline:
         root.scorerPoints.player = root.player
         root.scorerPoints.player_id = root.player_id
         root.scorerPoints.previousPoints = root.previousScorerPoints
-        root.scorerPoints.points = root.scorerPoints.previousPoints + root.bowls_points
+        root.scorerPoints.points = root.scorerPoints.previousPoints.number() + root.bowls_points
         root = root.scorerPoints
     - cache:
-        resource: hot
+        resource: multilevel
         operator: set
         key: 'match${! json("player") }-${! json("player_id") }-points'
         value: '${! json("points") }'

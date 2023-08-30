@@ -56,9 +56,7 @@ services:
     ports:
       - 4195:4195
     volumes:
-      - /Users/hortajav/Library/CloudStorage/OneDrive-adidas/utils/investigation/benthos/docker/benthos-config:/opt/benthos
-      - /Users/hortajav/Library/CloudStorage/OneDrive-adidas/utils/investigation/benthos/configs/resources:/opt/benthos/resources
-      - /Users/hortajav/Library/CloudStorage/OneDrive-adidas/utils/investigation/benthos/docker/resources:/opt/benthos/resources/storage
+      - ../configs/benthos:/opt/benthos
   cache:
     image: redis:7.0-alpine
     hostname: redis
@@ -72,3 +70,7 @@ services:
 volumes:
   cache:
     driver: local
+networks:
+  default:
+    # Use a custom driver
+    name: benthos-net

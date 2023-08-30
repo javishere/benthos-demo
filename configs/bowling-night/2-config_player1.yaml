@@ -16,7 +16,7 @@ pipeline:
     - mapping: |
         let rand1 = random_int(1)
         root = {}
-        root.player = "Javi"
+        root.player = "Aaina"
         root.player_id = 1
         root.bowls_points = $rand1 % 10 
 

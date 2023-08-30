@@ -6,7 +6,7 @@ input:
     topics: 
       - benthos.mock_data
     target_version: 3.3.1
-    consumer_group: "benthos-poc"
+    consumer_group: "benthos-poc-multi"
     checkpoint_limit: 1024
 
 output:

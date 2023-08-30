@@ -8,6 +8,6 @@ output:
   label: ""
   kafka:
     addresses:
-      - broker:9092
-    topic: benthos.mock_data
+      - broker:29092
+    topic: benthos.mock_data.std
     target_version: 3.3.1

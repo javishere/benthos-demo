@@ -1,6 +1,6 @@
 cache_resources:
   - label: multilevel
-    multilevel: [ 'cold', 'glacier' ]
+    multilevel: ['hot', 'cold']
   - label: hot
     memory:
       default_ttl: 20m
